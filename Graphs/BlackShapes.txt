@@ -1,0 +1,86 @@
+Problem Description
+
+Given character matrix A of O's and X's, where O = white, X = black.
+
+Return the number of black shapes. A black shape consists of one or more adjacent X's (diagonals not included)
+
+
+
+Problem Constraints
+
+1 <= |A|,|A[0]| <= 1000
+
+A[i][j] = 'X' or 'O'
+
+
+
+Input Format
+
+The First and only argument is character matrix A.
+
+
+
+Output Format
+
+Return a single integer denoting number of black shapes.
+
+
+
+Example Input
+
+Input 1:
+
+ A = [ [X, X, X], [X, X, X], [X, X, X] ]
+Input 2:
+
+ A = [ [X, O], [O, X] ]
+
+
+Example Output
+
+Output 1:
+
+ 1
+Output 2:
+
+ 2
+
+
+Example Explanation
+
+Explanation 1:
+
+ All X's belong to single shapes
+Explanation 2:
+
+ Both X's belong to different shapes
+
+COde:
+=====
+void dfs(int i,int j, vector<string> &A,vector<vector<int>> &visited,vector<int> &rows,vector<int> &cols) {
+     visited[i][j]=1;
+     for(int k=0;k<4;k++) {
+         int x= i+rows[k];
+         int y= j+cols[k];
+         if(x>=0 && y>=0 && x<A.size() && y<A[0].size() && A[x][y]=='X' && visited[x][y]==0){
+               dfs(x,y,A,visited,rows,cols);
+         }
+     }
+}
+int Solution::black(vector<string> &A) {
+    int count=0;
+    vector<vector<int>> visited(A.size(),vector<int>(A[0].size(),0));
+    int n=A.size();
+    int m=A[0].size();
+    vector<int> rows={0,0,1,-1};
+    vector<int> cols={-1,1,0,0};
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(A[i][j]=='X' && visited[i][j]==0){
+                  count+=1;
+                  dfs(i,j,A,visited,rows,cols);
+            }
+        }
+    }
+    return count;
+}

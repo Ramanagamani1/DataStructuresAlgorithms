@@ -1,0 +1,71 @@
+/*Given an integer A, and an integar vector B of size A. Cut the rod of length A into pieces such that sum of price of all pieces is maximum.
+B[i] denotes price of a piece of length i.
+
+Find and return maximum price possible after cutting the rod.
+
+
+Input Format
+
+The first argument given is integer A.
+The second argument given is array B.
+Output Format
+
+Find and return maximum price possible after cutting the rod.
+Constraints
+
+1 <= A <= 10^4
+1 <= B[i] <= 10^5
+For Example
+
+Input 1:
+    A = 5
+    B = [3, 7, 7, 10, 12]
+Output 1:
+    17
+Explaination 1:
+Rod of length 5 can be broken as :- 5 = 2 + 2 +1
+answer = B[2] + B[2] + B[1] = 7 + 7 + 3 = 17 
+
+Input 2:
+    A = 6
+    B = [1, 7, 9, 9 ,21, 44]
+Output 2:
+    44
+Explaination 2:
+Rod of length 6 can be broken as :- 6 = 6
+answer = B[6] = 44
+
+---------------------------------------------------------------------*/
+
+int f(int ind,int N,vector<int> &price,vector<vector<int>> &dp) {
+    if(ind==0){
+        return N*price[0];
+    }
+    if(dp[ind][N]!=-1)
+        return dp[ind][N];
+    int nottake = 0+f(ind-1,N,price,dp);
+    int take=INT_MIN;
+    if((ind+1)<=N){
+        take = price[ind]+f(ind,N-(ind+1),price,dp);
+    }
+    return dp[ind][N]=max(take,nottake);
+}
+
+int Solution::solve(int n, vector<int> &price) {
+    // vector<vector<int>> dp(A,vector<int>(A+1,-1));
+    // return f(A-1,A,B,dp);
+    vector<int> prev(n+1,0),cur(n+1,0);
+     for(int i=0;i<=n;i++)
+        prev[i]=i*price[0];
+    for(int ind=1;ind<n;ind++){
+        for(int N=0;N<=n;N++){
+            int nottake = 0+prev[N];
+            int take =0;
+            if(ind+1<=N)
+                take=price[ind]+cur[N-(ind+1)];
+            cur[N]=max(take,nottake);
+        } 
+        prev=cur;
+    }
+    return prev[n];
+}

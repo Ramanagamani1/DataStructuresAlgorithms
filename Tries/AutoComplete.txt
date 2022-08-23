@@ -1,0 +1,109 @@
+#include<iostream>
+#include<vector>
+#include<string.h>
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    Node *child[26];
+    vector<int> wordIndexes;
+
+    bool containsKey(char ch) {
+        return child[ch-'a']!=NULL;
+    }
+
+    void put(char ch,Node *node) {
+        child[ch-'a'] = node;
+    }
+
+    Node *get(char ch) {
+        return child[ch-'a'];
+    }
+
+    
+};
+class Trie {
+    private : Node *root;
+    public :
+
+    Trie() {
+        root = new Node();
+    }
+
+    void insert(string word,int j) {
+        Node *curr = root;
+        for(int i=0;i<word.length();i++) {
+            if(!curr->containsKey(word[i])) {
+                curr->put(word[i],new Node());
+            }
+            
+            curr = curr->get(word[i]); 
+            if(curr->wordIndexes.size()<5)   
+            curr->wordIndexes.push_back(j); 
+        }
+    }
+
+    vector<int> getTopFive(string word) {
+           Node *curr = root;
+           for(int i=0;i<word.size();i++) {
+                  if(!curr->containsKey(word[i]))
+                      return {};
+                  else
+                    curr=curr->get(word[i]);
+           }
+           return curr->wordIndexes;
+    }
+};
+
+int main()  {
+    // YOUR CODE GOES HERE
+    // Please take input and print output to standard input/output (stdin/stdout)
+    // E.g. 'cin' for input & 'cout' for output
+    int t;
+    cin >> t;
+    for(int i=0;i<t;i++) {
+           int n,m;
+           cin>>n>>m;
+
+           vector<string> A(n);
+           vector<int> wt(n);
+           vector<string> B(m);
+
+           for(int i=0;i<n;i++) {
+               cin>>A[i];     
+           }
+
+           for(int i=0;i<n;i++) {
+                cin>>wt[i];
+           }
+
+           for(int i=0;i<m;i++) {
+               cin>>B[i];
+           }
+
+           vector<pair<int,string>> mp;
+           for(int i=0;i<n;i++) {
+               mp.push_back({wt[i],A[i]});
+           }
+           sort(mp.rbegin(),mp.rend());
+
+           Trie *trie = new Trie();
+           for(int i=0;i<n;i++) {
+                  trie->insert(mp[i].second,i);
+           }
+
+           vector<int> ans;
+           for(int i=0;i<B.size();i++) {
+                 ans = trie->getTopFive(B[i]);
+                 if(ans.size()==0) {
+                     cout<<-1<<" ";
+                 } else {
+                    for(int i=0;i<ans.size();i++) {
+                        cout<<mp[ans[i]].second<<" ";
+                    }
+                 }
+                 cout<<endl;
+           }
+    }
+    return 0;
+}

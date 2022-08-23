@@ -1,0 +1,96 @@
+Problem Description
+
+Given a directed graph with A nodes and M edges.
+Find the minimum number of edges that needs to be reversed in order to reach node A from node 1.
+
+
+
+Problem Constraints
+
+1 <= A, M <= 10 5
+1 <= B[i][0], B[i][1] <= A
+There can be multiple edges or self loops (B[i][0] = B[i][1])
+
+
+Input Format
+
+The first argument is an integer A, denoting the number of nodes in the graph.
+The second argument is a 2D integer array B, denoting the directed edges in the graph.
+
+
+Output Format
+
+Return a single integer denoting the minimum number of edges to be reversed.
+
+
+Example Input
+
+Input 1:
+A = 5
+B = [[1, 2],
+     [2, 3],
+     [4, 3],
+     [4, 5]]
+Input 2:
+
+A = 5
+B = [[1, 2],
+     [2, 3],
+     [3, 4],
+     [4, 5]]
+
+
+Example Output
+
+Output 1:
+1
+Output 2:
+
+0
+
+
+Example Explanation
+
+Explanation 1:
+
+Reversing the edge (4, 3) is only required.
+
+Explanation 2:
+
+There already exists a path between 1 and A, so no edges need to be reversed.*/
+
+Code:
+=====
+int Solution::reverseEdges(int A, vector<vector<int> > &B) {
+     vector<pair<int,int>> adj[A+1];
+     for(int i=0;i<B.size();i++) {
+           int u=B[i][0];
+           int v= B[i][1];
+           adj[u].push_back({v,0});
+           adj[v].push_back({u,1});
+     } 
+     deque<int> dq;
+     dq.push_back(1);
+     vector<int> dist(A+1,INT_MAX);
+     dist[1]=0;
+     while(!dq.empty()) {
+         int x=dq.front();
+         dq.pop_front();
+         for(pair<int,int> it: adj[x]) {
+               int u = it.first;
+               int wt = it.second;
+               if(dist[u] > wt+dist[x]) {
+                   dist[u]=wt+dist[x];
+                   if (wt==1)
+                   dq.push_back(u);
+                   else
+                   dq.push_front(u);
+               }
+         }
+     }
+    //  for(int i=1;i<dist.size();i++)
+    //    cout<<dist[i]<<" ";
+     if (dist[A]== INT_MAX)
+        return -1;
+     return dist[A];
+}

@@ -1,0 +1,84 @@
+/*Max Sum Without Adjacent Elements
+Problem Description
+
+Given a 2 x N grid of integer, A, choose numbers such that the sum of the numbers is maximum and no two chosen numbers are adjacent horizontally, vertically or diagonally, and return it.
+
+Note: You can choose more than 2 numbers.
+
+
+
+Problem Constraints
+1 <= N <= 20000
+1 <= A[i] <= 2000
+
+
+
+Input Format
+The first and the only argument of input contains a 2d matrix, A.
+
+
+
+Output Format
+Return an integer, representing the maximum possible sum.
+
+
+
+Example Input
+Input 1:
+
+ A = [   
+        [1]
+        [2]    
+     ]
+Input 2:
+
+ A = [   
+        [1, 2, 3, 4]
+        [2, 3, 4, 5]    
+     ]
+
+
+Example Output
+Output 1:
+
+ 2
+Output 2:
+
+ 8
+
+
+Example Explanation
+Explanation 1:
+
+ We will choose 2.
+Explanation 2:
+
+ We will choose 3 and 5.*/
+
+=====================================================================
+
+int maxSum(vector<int> arr,int n,vector<int> dp){
+  /*  if(n==0)
+       return arr[0];
+    if (n==1)
+       return max(arr[0],arr[1]);
+    if(dp[n]!=0)
+       return dp[n];
+    dp[n]=max(arr[n]+maxSum(arr,n-2,dp),maxSum(arr,n-1,dp));
+    return dp[n];*/
+    dp[0]=arr[0];
+    dp[1]=max(arr[0],arr[1]);
+    for(int i=2;i<arr.size();i++){
+        dp[i]=max(arr[i]+dp[i-2],dp[i-1]);
+    }
+    return dp[n];
+}
+
+int Solution::adjacent(vector<vector<int> > &A) {
+    vector<int> dp(20000,0);
+    vector<int> arr;
+    for(int i=0;i<A[0].size();i++){
+        arr.push_back(max(A[0][i],A[1][i]));
+    }
+    return maxSum(arr,arr.size()-1,dp);
+}

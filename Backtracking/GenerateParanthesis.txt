@@ -1,0 +1,78 @@
+/*Generate all Parentheses II
+Problem Description
+
+Given an integer A pairs of parentheses, write a function to generate all combinations of well-formed parentheses of length 2*A.
+
+
+
+Problem Constraints
+1 <= A <= 20
+
+
+
+Input Format
+First and only argument is integer A.
+
+
+
+Output Format
+Return a sorted list of all possible paranthesis.
+
+
+
+Example Input
+Input 1:
+
+A = 3
+Input 2:
+
+A = 1
+
+
+Example Output
+Output 1:
+
+[ "((()))", "(()())", "(())()", "()(())", "()()()" ]
+Output 2:
+
+[ "()" ]
+
+
+Example Explanation
+Explanation 1:
+
+ All paranthesis are given in the output list.
+Explanation 2:
+
+ All paranthesis are given in the output list.*/
+
+===================================================================================
+vector<string> ans;
+
+void generateParanthesis(int A,int open,int closed,int ind){
+    static char arr[100];   
+    if((closed==A) || (ind==(2*A))){
+        string s=arr;
+        ans.push_back(s);
+        s.clear();
+        //cout<<arr<<endl;
+        return;
+    }
+    if(open>A || closed>A)
+        return;
+    if(open<A){
+        arr[ind]='(';
+        generateParanthesis(A,open+1,closed,ind+1);
+    }
+    if(open>closed){
+        arr[ind]=')';
+        generateParanthesis(A,open,closed+1,ind+1);
+    }
+}
+
+vector<string> Solution::generateParenthesis(int A) {
+    ans.clear();
+    //char arr[2*A];
+    generateParanthesis(A,0,0,0);
+    return ans;
+}

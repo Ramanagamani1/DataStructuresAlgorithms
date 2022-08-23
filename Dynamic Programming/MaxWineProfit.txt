@@ -1,0 +1,61 @@
+/*Max Wine Profit
+Problem Description
+
+Given n wines in a row, with integers denoting the cost of each wine respectively. Each year you can sell the first or the last wine in the row. However, the price of wines increases over time. Let the initial profits from the wines be A1, A2, A3…An. In the Yth year, the profit from the ith wine will be Y*Ai. Calculate the maximum possible profit that can be obtained if you sell exactly one wine each year.
+
+You are given an integer array A where A[i] denotes the cost of the ith wine.
+
+
+
+Problem Constraints
+1 <= n <= 1000
+1 <= A[i] <= 1000
+
+
+Input Format
+The first and only argument is the integer array A.
+
+
+Output Format
+Return a single integer, the answer to the problem.
+
+
+Example Input
+Input 1:
+A = [1 2 4 3 1]
+Input 2:
+
+A = [1]
+
+
+Example Output
+Output 1:
+41
+Output 2:
+
+1
+
+
+Example Explanation
+Explanation 1:
+The wines can be chosen in the following order - 1(1), 1(2), 2(6), 3(12), 4(20). The values in the brackets denote the values they were sold at.
+Explanation 2:
+
+Only 1 way exists.*/
+===================================================================================
+
+int maxProfit(vector<int> &price,int n,int i,int j,vector<vector<int>> &dp){
+    if(i==j)
+      return price[i]*n;
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    int year=n-(j-i);
+    int x=price[i]*year+maxProfit(price,n,i+1,j,dp);
+    int y=price[j]*year+maxProfit(price,n,i,j-1,dp);
+    dp[i][j]=max(x,y);
+    return dp[i][j];
+}
+int Solution::solve(vector<int> &A) {
+    vector<vector<int>> dp(A.size()+1, vector<int>(A.size()+1, -1));
+    return maxProfit(A,A.size(),0,A.size()-1,dp);
+}

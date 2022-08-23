@@ -1,0 +1,109 @@
+Problem Description
+
+Given a 2-D board A of size N x M containing 'X' and 'O', capture all regions surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+
+
+Problem Constraints
+
+1 <= N, M <= 1000
+
+
+
+Input Format
+
+First and only argument is a N x M character matrix A.
+
+
+
+Output Format
+
+Make changes to the the input only as matrix is passed by reference.
+
+
+
+Example Input
+
+Input 1:
+
+ A = [ 
+       [X, X, X, X],
+       [X, O, O, X],
+       [X, X, O, X],
+       [X, O, X, X] 
+     ]
+Input 2:
+
+ A = [
+       [X, O, O],
+       [X, O, X],
+       [O, O, O]
+     ]
+
+
+Example Output
+
+Output 1:
+
+ After running your function, the board should be:
+ A = [
+       [X, X, X, X],
+       [X, X, X, X],
+       [X, X, X, X],
+       [X, O, X, X]
+     ]
+Output 2:
+
+ After running your function, the board should be:
+ A = [
+       [X, O, O],
+       [X, O, X],
+       [O, O, O]
+     ]
+
+Code:
+=====
+
+void dfs(vector<vector<char>> &A,int i, int j, int n,int m,vector<int> &rows,vector<int> &cols) {
+     A[i][j]='N';
+     for(int k=0;k<4;k++){
+         int x = i+rows[k];
+         int y = j+cols[k];
+         if(x>=0 && x<n && y>=0 && y<m && A[x][y]=='O'){
+             dfs(A,x,y,n,m,rows,cols);
+         }
+     }
+}
+
+void Solution::solve(vector<vector<char> > &A) {
+    // Do not write main() function.
+    // Do not read input, instead use the arguments to the function.
+    // Do not print the output, instead return values as specified
+    // Still have a doubt. Checkout www.interviewbit.com/pages/sample_codes/ for more details
+    int n=A.size();
+    int m=A[0].size();
+    vector<int> rows={0,0,1,-1};
+    vector<int> cols={1,-1,0,0};
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(i==0 || j==0 || i==n-1 || j==m-1){
+                if(A[i][j]=='O')
+                   dfs(A,i,j,n,m,rows,cols);
+            }
+        }
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(A[i][j]=='O')
+               A[i][j]='X';
+        }
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(A[i][j]=='N')
+               A[i][j]='O';
+        }
+    }
+}

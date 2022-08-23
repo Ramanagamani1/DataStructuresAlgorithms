@@ -1,0 +1,66 @@
+/*Given an array of integers A of size N in which ith element is the price of the stock on day i,
+
+You can complete atmost B transactions.
+
+Find the maximum profit you can achieve.
+
+NOTE: You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+
+
+Input Format
+
+The First argument given is the integer array A.
+The Second argument is integer B.
+Output Format
+
+Return the maximum profit you can achieve by doing atmost B transactions.
+Constraints
+
+1 <= N <= 500
+0 <= A[i] <= 10^6
+0 <= B <= 10^9
+For Example
+
+Input 1:
+    A = [2, 4, 1]
+    B = 2
+Output 1:
+    2
+    Explanation 1:
+        Buy on day 1 (price = 2) and sell on day 2 (price = 4), 
+        profit = 4 - 2 = 2
+
+Input 2:
+    A = [3, 2, 6, 5, 0, 3]
+    B = 2
+Output 2:
+    7
+    Explanation 1:
+        Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6 - 2 = 4.
+        Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3 - 0 = 3.
+
+---------------------------------------------------------------------------------*/
+
+int Solution::solve(vector<int> &A, int B) {
+    int n=A.size();
+    if(B>n){
+        B=n/2;
+    }
+    int profit[B+1][n+1];
+    
+    for(int i=0;i<=B;i++)
+      profit[i][0]=0;
+     
+    for(int i=0;i<=n;i++)
+      profit[0][i]=0;
+      
+    
+    for(int k=1;k<=B;k++){
+        int prevDiff=INT_MIN;
+        for(int i=1;i<n;i++){
+            prevDiff=max(prevDiff,profit[k-1][i-1]-A[i-1]);
+            profit[k][i]=max(profit[k][i-1],prevDiff+A[i]);
+        }
+    }
+    return profit[B][n-1];
+}
