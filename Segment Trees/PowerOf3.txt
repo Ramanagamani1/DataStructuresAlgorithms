@@ -1,0 +1,63 @@
+void update(vector<int> &tree,int ind,int low,int high,int i,int value) {
+    if(low==i && high==i) {
+        tree[ind] = value;
+        return ;
+    }
+    int mid = low+(high-low)/2;
+    if(i<=mid) {
+         update(tree,2*ind+1,low,mid,i,value);
+    } else {
+        update(tree,2*ind+2,mid+1,high,i,value);
+    }
+    int num_bits = high-mid;
+    int val = num_bits%2 == 0 ? 1:2;
+
+    tree[ind] = ((tree[2*ind+1]*val)%3+ tree[2*ind+2])%3;
+}
+int rangeQuery(vector<int> &tree,int ind,int low,int high,int qL,int qR) {
+       if(high<qL || low>qR) {
+           return 0;
+       }
+       if(qL<=low && high<=qR) {
+           return tree[ind];
+       }
+       int mid = low+(high-low)/2;
+       int left = rangeQuery(tree,2*ind+1,low,mid,qL,qR);
+       int right = rangeQuery(tree,2*ind+2,mid+1,high,qL,qR);
+
+       int num_bits = min(qR,high)-mid;
+       int val = num_bits%2==0 ? 1: 2;
+
+       return ((left*val)%3+right)%3;
+}
+int buildSegTree(vector<int> &tree,int ind,int low,int high,string &A) {
+    if(low==high) {
+        tree[ind] = A[low];
+        return A[low];
+    }
+    int mid = low+(high-low)/2;
+    buildSegTree(tree,2*ind+1,low,mid,A);
+    buildSegTree(tree,2*ind+2,mid+1,high,A);
+
+    int num_bits = high-mid;
+    int val = num_bits%2 == 0 ? 1:2;
+
+    tree[ind] = ((tree[2*ind+1]*val)%3 + tree[2*ind+2])%3;
+    return tree[ind];
+}
+vector<int> Solution::solve(string A, vector<vector<int> > &B) {
+    int n=A.size();
+    vector<int> tree(4*n,0);
+    buildSegTree(tree,0,0,n-1,A);
+    vector<int> ans;
+    for(int i=0;i<B.size();i++) {
+        if(B[i][0]==0) {
+            int val = rangeQuery(tree,0,0,n-1,B[i][1]-1,B[i][2]-1);
+            ans.push_back(val);
+        } else {
+            update(tree,0,0,n-1,B[i][1]-1,1);
+            ans.push_back(-1);
+        }
+    }
+    return ans;
+}
